@@ -1,0 +1,8 @@
+{
+  "name": "chrome-style-browser",
+  "version": "1.0.0",
+  "description": "Navigateur de bureau avec une interface inspiree de Chrome",
+  "main": "main.js",
+  "scripts": {"start": "electron ."},
+  "devDependencies": {"electron": "^38.0.0"}
+}

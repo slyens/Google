@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Chrome Style</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#202124;color:#e8eaed;font-family:Arial,sans-serif;overflow:hidden}
+.tabs{height:42px;background:#202124;display:flex;align-items:end;padding:0 8px;gap:3px}
+.tab{height:38px;min-width:180px;max-width:260px;background:#292a2d;border-radius:10px 10px 0 0;display:flex;align-items:center;padding:0 10px;gap:9px;color:#bdc1c6;cursor:pointer}
+.tab.active{background:#35363a;color:#fff}.tab .title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:13px}.x{font-size:16px}.plus{width:38px;height:32px;border:0;background:transparent;color:#fff;font-size:23px;cursor:pointer}
+.toolbar{height:66px;background:#35363a;display:flex;align-items:center;padding:9px 12px;gap:7px}
+.tool{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#e8eaed;font-size:22px;cursor:pointer}.tool:hover{background:#4a4b4f}
+.home{font-size:20px}.address{height:44px;flex:1;border:0;outline:0;border-radius:23px;background:#202124;color:#e8eaed;padding:0 18px;font-size:15px}.address:focus{background:#fff;color:#202124}
+.star{font-size:20px}.menu{font-size:25px}
+</style></head>
+<body>
+<div class="tabs" id="tabs"></div>
+<div class="toolbar">
+<button class="tool" onclick="A.back()">←</button><button class="tool" onclick="A.forward()">→</button>
+<button class="tool" onclick="A.reload()">↻</button><button class="tool home" onclick="A.home()">⌂</button>
+<input id="address" class="address" placeholder="Rechercher sur Google ou saisir une adresse" spellcheck="false">
+<button class="tool star">☆</button><button class="tool menu">⋮</button>
+</div>
+<script>
+const A=window.chromeAPI, tabs=document.getElementById("tabs"), address=document.getElementById("address");
+function render(state){
+ tabs.innerHTML="";
+ state.forEach((t,i)=>{
+  const el=document.createElement("div");el.className="tab"+(t.active?" active":"");
+  el.onclick=()=>A.selectTab(i);
+  el.innerHTML='<span>🌐</span><span class="title"></span><span class="x">×</span>';
+  el.querySelector(".title").textContent=t.title;
+  el.querySelector(".x").onclick=e=>{e.stopPropagation();A.closeTab(i)};
+  tabs.appendChild(el);
+ });
+ const plus=document.createElement("button");plus.className="plus";plus.textContent="+";
+ plus.onclick=()=>A.newTab();tabs.appendChild(plus);
+ const active=state.find(t=>t.active);if(active)address.value=active.url;
+}
+address.addEventListener("keydown",e=>{if(e.key==="Enter")A.navigate(address.value)});
+A.onState(render);
+</script></body></html>
